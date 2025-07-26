@@ -93,137 +93,104 @@
       <!-- Product Top Section-->
       <div class="row g-9" data-sticky-container>
 
-        <!-- Product Images-->
+        <!-- Immagini Prodotto-->
         {% if success_message %}
-        <div class="alert alert-success" role="alert" style="position:relative; left:0px; top:-120px;">
+        <div class="alert alert-success" role="alert" style="position:relative; left:0px; top:-120px; font-size:1.2rem; font-weight:500;">
+          <i class="ri-check-line" style="font-size:1.5rem; color:#198754; vertical-align:middle;"></i>
           {{ success_message }}
         </div>
         {% endif %}
-
+        {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+          {{ error_message }}
+        </div>
+        {% endif %}
+        {% if auto %}
         <div class="col-12 col-md-6 col-xl-7">
-
-          <div class="row g-3" data-aos="fade-right">
-            <div class="col-12">
+          <div class="row g-3 justify-content-center" data-aos="fade-right">
+            <div class="col-12 d-flex justify-content-center">
               <picture>
-
-                <img class="img-fluid" data-zoomable
-                  src="{{ url_for('static', filename='images/cars/'+voiture.image) }}"
-                  alt="HTML Bootstrap Template by Pixel Rocket">
+                <img class="img-fluid car-image-custom" data-zoomable
+                  src="{{ url_for('static', filename='images/cars/'+auto.image) }}"
+                  alt="{{ auto.modello }} {{ auto.marca }}">
               </picture>
-
             </div>
           </div>
+          <style>
+            .car-image-custom {
+              display: block;
+              margin: 0 auto 18px auto;
+              max-width: 420px;
+              width: 100%;
+              height: 240px;
+              object-fit: cover;
+              border-radius: 14px;
+              box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+              background: #fff;
+            }
+            @media (max-width: 900px) {
+              .car-image-custom { max-width: 100%; height: 180px; }
+            }
+            @media (max-width: 600px) {
+              .car-image-custom { height: 120px; }
+            }
+          </style>
+          <!-- Info auto visibili -->
+          <div class="car-info-box mt-4 p-4 rounded shadow" style="background: #f8f9fa;">
+            <div class="row g-3 align-items-center">
+              <div class="col-6 col-md-3 text-center">
+                <div class="info-icon mb-2" style="font-size:2.2rem;color:#007bff;"><i class="ri-car-line"></i></div>
+                <div class="fw-bold">Modello</div>
+                <div>{{auto.modello}}</div>
+              </div>
+              <div class="col-6 col-md-3 text-center">
+                <div class="info-icon mb-2" style="font-size:2.2rem;color:#007bff;"><i class="ri-building-2-line"></i></div>
+                <div class="fw-bold">Marca</div>
+                <div>{{auto.marca}}</div>
+              </div>
+              <div class="col-6 col-md-3 text-center">
+                <div class="info-icon mb-2" style="font-size:2.2rem;color:#007bff;"><i class="ri-hashtag"></i></div>
+                <div class="fw-bold">Targa</div>
+                <div>{{auto.targa}}</div>
+              </div>
+              <div class="col-6 col-md-3 text-center">
+                <div class="info-icon mb-2" style="font-size:2.2rem;color:#007bff;"><i class="ri-calendar-2-line"></i></div>
+                <div class="fw-bold">Anno</div>
+                <div>{{auto.anno}}</div>
+              </div>
+            </div>
+            <!-- Descrizione rimossa come richiesto -->
+          </div>
         </div>
-        <!-- /Product Images-->
+        <!-- /Immagini Prodotto e Info-->
 
-
-        <!-- Product Information-->
+        <!-- Informazioni Prodotto-->
         <div class="col-12 col-md-6 col-lg-5">
           <div class="sticky-top top-5">
             <div class="pb-3" data-aos="fade-in">
-
-              <h1 class="mb-1 fs-2 fw-bold">{{voiture.modele}} {{voiture.marque}}</h1>
+              <a href="/" class="btn btn-outline-primary mb-3">&larr; Torna alla Home</a>
+              <h1 class="mb-1 fs-2 fw-bold">{{auto.modello}} {{auto.marca}}</h1>
               <div class="d-flex justify-content-between align-items-center">
-                <p class="fs-4 m-0">{{voiture.prix}}</p>
+                <p class="fs-4 m-0">{{auto.prezzo}} €/giorno</p>
               </div>
+              <p class="mt-2">{{auto.descrizione}}</p>
+              <!-- Targa e Anno rimossi dalla prenotazione, restano nella tabella sotto -->
 
-
-
-              <form action="/location_car/{{ voiture_id }}" method="POST">
+              <form action="/location_car/{{ auto._id }}" method="POST">
                 <div class="mb-3">
-                  <label for="client" class="form-label">Client</label>
-                  <select id="client" name="client" class="form-select" aria-label="Default select example"
-                    onchange="updateClientInfo()">
-                    <option selected>Select Client</option>
-                    {% for client in clients %}
-                    <option value="{{ client['_id'] }}" data-telephone="{{ client['tel'] }}"
-                      data-email="{{ client['email'] }}">{{ client['nom'] }} {{ client['prenom'] }}</option>
-                    {% endfor %}
-                  </select>
-
-                  <label for="telephone" class="form-label" id="telephoneLabel" style="display: none;">Telephone</label>
-                  <input type="text" class="form-control" id="telephone" readonly style="display: none;">
-
-                  <label for="email" class="form-label" id="emailLabel" style="display: none;">Email</label>
-                  <input type="text" class="form-control" id="email" readonly style="display: none;">
-
-
-                  <div class="mb-3">
-                    <label for="date_debut" class="form-label">Start Date</label>
-                    <input type="date" class="form-control" id="date_debut" name="date_debut">
-                  </div>
-                  <div class="mb-3">
-                    <label for="date_fin" class="form-label">End Date</label>
-                    <input type="date" class="form-control" id="date_fin" name="date_fin">
-                  </div>
-
-
+                  <label for="date_debut" class="form-label">Data inizio</label>
+                  <input type="date" class="form-control" id="date_debut" name="date_debut">
                 </div>
-                <button type="submit" class="btn btn-dark w-100 mt-4 mb-0 hover-lift-sm hover-boxshadow">Louer</button>
+                <div class="mb-3">
+                  <label for="date_fin" class="form-label">Data fine</label>
+                  <input type="date" class="form-control" id="date_fin" name="date_fin">
+                </div>
+                <button type="submit" class="btn btn-dark w-100 mt-4 mb-0 hover-lift-sm hover-boxshadow">Prenota</button>
               </form>
-
-              <br><br><br><br><br>
-
-
-
-
-
-              <!-- <button class="btn btn-dark w-100 mt-4 mb-0 hover-lift-sm hover-boxshadow">Louer</button> -->
-
-
-
-
-
-              <!-- Product Accordion -->
-              <div class="accordion" id="accordionProduct">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      Voiture Modele
-                    </button>
-                  </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                    data-bs-parent="#accordionProduct">
-                    <div class="accordion-body">
-                      <p class="m-0">{{voiture.modele}}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Voiture Marque
-                    </button>
-                  </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                    data-bs-parent="#accordionProduct">
-                    <div class="accordion-body">
-                      <p class="m-0">{{voiture.marque}}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      Voiture matricule
-                    </button>
-                  </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                    data-bs-parent="#accordionProduct">
-                    <div class="accordion-body">
-                      <p class="m-0">{{voiture.matricule}}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- / Product Accordion-->
             </div>
           </div>
         </div>
-        <!-- / Product Information-->
+        {% endif %}
       </div>
       <!-- / Product Top Section-->
 
@@ -270,6 +237,32 @@
 
 
   <script>
+    // Imposta la data minima per oggi lato JS (fallback se il template non la imposta)
+    document.addEventListener('DOMContentLoaded', function() {
+      var today = new Date();
+      var yyyy = today.getFullYear();
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var dd = String(today.getDate()).padStart(2, '0');
+      var minDate = yyyy + '-' + mm + '-' + dd;
+      var dateDebut = document.getElementById('date_debut');
+      var dateFin = document.getElementById('date_fin');
+      if (dateDebut) dateDebut.setAttribute('min', minDate);
+      if (dateFin) dateFin.setAttribute('min', minDate);
+
+      // Quando cambia la data di inizio, aggiorna la data minima di fine
+      if (dateDebut && dateFin) {
+        dateDebut.addEventListener('change', function() {
+          if (dateDebut.value) {
+            dateFin.min = dateDebut.value;
+            if (dateFin.value < dateDebut.value) {
+              dateFin.value = dateDebut.value;
+            }
+          } else {
+            dateFin.min = minDate;
+          }
+        });
+      }
+    });
     function updateClientInfo() {
       var clientSelect = document.getElementById("client");
       var telephoneInput = document.getElementById("telephone");

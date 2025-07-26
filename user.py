@@ -14,9 +14,9 @@ class User():
     def get(email):
         try:
             mongo = pymongo.MongoClient(host="localhost", port=27017, serverSelectionTimeoutMS=1000)
-            db = mongo.location_voitures
+            db = mongo.vetture
             mongo.server_info()
-            print("Connected to MongoDB")
+            print("Connected to MongoDB vetture")
         except Exception as e:
             print("ERROR - Cannot connect to MongoDB:", str(e))
             return None
@@ -42,11 +42,11 @@ class User():
         # CONNECTION TO DB
         try:
             mongo = pymongo.MongoClient(host="localhost", port=27017, serverSelectionTimeoutMS=1000)
-            db = mongo.location_voitures 
+            db = mongo.vetture
             mongo.server_info()
-            print("Connected to MongoDB")
+            print("Connected to MongoDB vetture")
         except:
-            print("ERROR - Cannot connect to MongoDB")
+            print("ERROR - Cannot connect to MongoDB vetture")
 
         user = db.utilisateur.find_one({"email": email})
 

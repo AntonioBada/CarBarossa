@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Prenotazioni</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Gestione Prenotazioni</h2>
+        {% if reservations|length == 0 %}
+            <div class="alert alert-info">Nessuna prenotazione in attesa di conferma.</div>
+        {% else %}
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID Auto</th>
+                    <th>Data inizio</th>
+                    <th>Data fine</th>
+                    <th>Prezzo totale</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pren in reservations %}
+                <tr>
+                    <td>{{ pren.auto_id }}</td>
+                    <td>{{ pren.date_debut.strftime('%d/%m/%Y') if pren.date_debut }}</td>
+                    <td>{{ pren.date_fin.strftime('%d/%m/%Y') if pren.date_fin }}</td>
+                    <td>{{ pren.prix_reservation }} €</td>
+                    <td>
+                        {% if pren.statut == 'en_attente' %}
+                            <span class="badge bg-warning text-dark">In attesa</span>
+                        {% elif pren.statut == 'accettata' %}
+                            <span class="badge bg-success">Accettata</span>
+                        {% elif pren.statut == 'rifiutata' %}
+                            <span class="badge bg-danger">Rifiutata</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if pren.statut == 'en_attente' %}
+                        <form method="POST" action="/admin/gestione_prenotazioni" class="d-inline">
+                            <input type="hidden" name="reservation_id" value="{{ pren._id }}">
+                            <button type="submit" name="action" value="accettata" class="btn btn-success btn-sm">Accetta</button>
+                            <button type="submit" name="action" value="rifiutata" class="btn btn-danger btn-sm">Rifiuta</button>
+                        </form>
+                        {% else %}
+                            <em>Nessuna azione disponibile</em>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <a href="/admin" class="btn btn-secondary mt-3">Torna alla Dashboard Admin</a>
+    </div>
+</body>
+</html>

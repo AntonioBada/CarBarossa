@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risultati Ricerca - CarBarossa</title>
+    <link rel="stylesheet" href="/static/css/theme.bundle.css">
+    <link rel="icon" href="/static/images/favicon/favicon.ico">
+    <style>
+        body { background: #f8f9fa; }
+        .car-card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 1rem; margin-bottom: 2rem; }
+        .car-img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; }
+        .car-title { font-size: 1.2rem; font-weight: 600; margin-top: 0.5rem; }
+        .car-price { color: #007bff; font-weight: 500; margin-top: 0.5rem; }
+        .btn-primary { background: #007bff; border: none; color: #fff; border-radius: 4px; padding: 0.5rem 1.2rem; font-weight: 500; }
+        .search-info { background: #fff; border-radius: 8px; padding: 1rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .navbar, .footer { background: #fff; }
+        .footer { padding: 1.5rem 0; color: #333; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/static/images/logos/logo1.png" alt="CarBarossa" height="40">
+                <span class="ms-2 fw-bold text-dark">CarBarossa</span>
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link text-dark" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="/cars">Veicoli</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="/AddNewClient">Prenota</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Search Info -->
+        <div class="search-info mb-4">
+            <h4 class="mb-2">Risultati della ricerca</h4>
+            <div class="row">
+                <div class="col-md-4"><strong>Data ritiro:</strong> {{ pickup_date or 'Qualsiasi' }}</div>
+                <div class="col-md-4"><strong>Data riconsegna:</strong> {{ dropoff_date or 'Qualsiasi' }}</div>
+                <div class="col-md-4"><strong>Categoria:</strong> {{ category or 'Tutte' }}</div>
+            </div>
+        </div>
+
+        <!-- Car Results -->
+        <div class="row">
+            {% if cars and cars|length > 0 %}
+                {% for car in cars %}
+                <div class="col-md-4">
+                    <div class="car-card">
+                        <img class="car-img" src="/static/images/cars/{{ car.image or 'default.jpg' }}" alt="{{ car.marque }} {{ car.modele }}">
+                        <div class="car-title">{{ car.marque }} {{ car.modele }}</div>
+                        <div class="car-price">{{ car.prix }} € / giorno</div>
+                        <a href="/location_car/{{ car._id }}" class="btn btn-primary mt-2">Prenota ora</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">Nessun veicolo trovato per i criteri selezionati.</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container text-center">
+            <span>&copy; 2025 CarBarossa. Tutti i diritti riservati.</span>
+        </div>
+    </footer>
+</body>
+</html>

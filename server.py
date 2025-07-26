@@ -17,7 +17,7 @@ from pymongo import MongoClient
 ## CONNECTION TO DB
 try : 
     mongo = pymongo.MongoClient(host="localhost", port =27017,serverSelectionTimeoutMS =1000 )
-    db = mongo.location_voitures #use the company db in mongo 
+    db = mongo.vetture #use the company db in mongo 
     mongo.server_info() 
     print("connect to db")
 
@@ -132,9 +132,8 @@ def delete_manager():
     
 @app.route('/admin')
 def list_admins():
-    role = "admin"
-    managers = db.utilisateur.find({'role': role})
-    return render_template('AdminList.html', clients=managers)
+    print("DEBUG: Entrato nella route /admin")
+    return render_template('AdminList.html')
 
 
 @app.route('/deleteAdmin', methods=['POST'])
@@ -237,8 +236,8 @@ try:
         serverSelectionTimeoutMS = 1000     
     )
 
-    db = mongo.location_voitures
-    cars_collection = db['voiture']
+    db = mongo.vetture
+    cars_collection = db['auto']
     mongo.server_info() # trigger exception if cannot connect to db
     print("Connected to db")
 except:
@@ -333,7 +332,7 @@ app.secret_key = 'HereWegoAgain'
 
 
 client = MongoClient('mongodb://localhost:27017')
-db = client['location_voitures']
+db = client['vetture']
 collection = db['client']
 
 
@@ -446,63 +445,54 @@ reservation_collection = db['reservation']
 @app.route("/location_car/<voiture_id>", methods=['GET', 'POST'])
 def location_car(voiture_id):
     if request.method == 'POST':
-        client_id = ObjectId(request.form.get('client'))
-        voiture_id = ObjectId(voiture_id)
         date_debut_str = request.form.get('date_debut')
         date_fin_str = request.form.get('date_fin')
-        
-        voitures = db.voiture.find_one({"_id": ObjectId(voiture_id)})
-        date_debut = datetime.strptime(date_debut_str, "%Y-%m-%d")
-        date_fin = datetime.strptime(date_fin_str, "%Y-%m-%d")
-
-        # Calculate the difference in days
-        diff_days = (date_fin - date_debut).days
-
-        # Calculate the price based on the difference in days
-        price = diff_days * voitures.get('prix')
-        print(price)
-        
-        
-        #prix_reservation = int(request.form.get('prix_reservation'))
-        statut = request.form.get('statut', 'en_attente')  # Set the default value to "en_attente"
-
-        # Convert date_debut and date_fin to datetime objects
-        date_debut = datetime.strptime(date_debut_str, '%Y-%m-%d')
-        date_fin = datetime.strptime(date_fin_str, '%Y-%m-%d')
-
-        print("====================================")
-        print(client_id)
-        print(voiture_id)
-        print(date_debut)
-        print(date_fin)
-        print(statut)
-        print("====================================")
-
-        # Store the client, car, and statut details in the reservation collection
-        reservation = {
-            'client_id': client_id,
-            'voiture_id': voiture_id,
-            'date_debut': date_debut,
-            'date_fin': date_fin,
-            'prix_reservation': price,
-            'statut': statut
-        }
-        reservation_collection.insert_one(reservation)
-        clients = db['client'].find()
-
-        # Redirect or render a success page
-        return redirect('/cars')
-        #return render_template('location_car.html',success_message="Voiture bien reserver!",clients=clients, voiture_id=voiture_id,voiture=voitures)
-
-    # Fetch client and car data to populate the select options
+        try:
+            try:
+                obj_id = ObjectId(voiture_id)
+                auto = db['auto'].find_one({"_id": obj_id})
+            except Exception:
+                auto = db['auto'].find_one({"_id": voiture_id})
+            print(f"ID cercato: {voiture_id}, auto trovata: {auto}")
+            if not auto:
+                return render_template("location_car.html", voiture_id=voiture_id, auto=None, error_message="Auto non trovata. Controlla l'ID o i dati nel database.")
+            date_debut = datetime.strptime(date_debut_str, "%Y-%m-%d")
+            date_fin = datetime.strptime(date_fin_str, "%Y-%m-%d")
+            oggi = datetime.now().date()
+            if date_debut.date() <= oggi:
+                return render_template("location_car.html", voiture_id=voiture_id, auto=auto, error_message="Non è possibile prenotare per oggi o per una data passata.")
+            diff_days = (date_fin - date_debut).days
+            price = diff_days * auto.get('prezzo', 0)
+            statut = request.form.get('statut', 'en_attente')
+            reservation = {
+                'auto_id': voiture_id,
+                'date_debut': date_debut,
+                'date_fin': date_fin,
+                'prix_reservation': price,
+                'statut': statut
+            }
+            reservation_collection.insert_one(reservation)
+            # Mostra la stessa pagina con messaggio di successo
+            return render_template("location_car.html", voiture_id=voiture_id, auto=auto, success_message="Prenotazione avvenuta con successo!")
+        except Exception as e:
+            print(f"Errore nella ricerca auto: {e}")
+            return render_template("location_car.html", voiture_id=voiture_id, auto=None, error_message="Errore nella ricerca auto.")
     clients = db['client'].find()
-  
-    voitures = db.voiture.find_one({"_id": ObjectId(voiture_id)})
-    
-   
-
-  
-    return render_template("location_car.html", clients=clients, voiture_id=voiture_id,voiture=voitures)
+    # Logga tutti gli ID delle auto presenti
+    all_autos = list(db['auto'].find())
+    print('ID auto presenti nel database:')
+    for a in all_autos:
+        print(a['_id'])
+    # Prova a convertire l'id in ObjectId, se fallisce usa la stringa
+    try:
+        obj_id = ObjectId(voiture_id)
+        voitures = db['auto'].find_one({"_id": obj_id})
+    except Exception:
+        voitures = db['auto'].find_one({"_id": voiture_id})
+    print(f"ID cercato (GET): {voiture_id}, auto trovata: {voitures}")
+    if not voitures:
+        return render_template("location_car.html", clients=clients, voiture_id=voiture_id, auto=None, error_message="Auto non trovata. Controlla l'ID o i dati nel database.")
+    return render_template("location_car.html", clients=clients, voiture_id=voiture_id, auto=voitures)
 
 
 
@@ -534,9 +524,22 @@ def gestion_reservations():
     
             
     # Fetch all reservations from the collection
-    reservations = reservation_collection.find({"statut": "en_attente"})
+    reservations_raw = list(reservation_collection.find({"statut": "en_attente"}))
+    enriched_reservations = []
+    for reservation in reservations_raw:
+        # Recupera l'auto associata
+        auto_id = reservation.get('auto_id')
+        try:
+            auto_obj_id = ObjectId(auto_id)
+        except Exception:
+            auto_obj_id = auto_id
+        auto = db['auto'].find_one({'_id': auto_obj_id})
+        # Inserisci marca e modello se disponibili
+        reservation['marque'] = auto.get('marque', '') if auto else ''
+        reservation['modele'] = auto.get('modele', '') if auto else ''
+        enriched_reservations.append(reservation)
 
-    return render_template('gestion_reservations.html', reservations=reservations)
+    return render_template('gestion_reservations.html', reservations=enriched_reservations)
 
 
 
@@ -602,9 +605,9 @@ def dashboardtest():
 
 
 
-
-
-
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 
 
@@ -613,9 +616,41 @@ def dashboardtest():
 ####################################
 # if the script is the main programme, else if its imported from another module not __main__
 if __name__ == "__main__"  :
-    app.run(port =80, debug =True ) 
+    app.run(port =80, debug =True )
 
 
+@app.route('/search', methods=['GET'])
+def search():
+    pickup_date = request.args.get('pickup_date')
+    dropoff_date = request.args.get('dropoff_date')
+    category = request.args.get('category')
 
+    # Validate and parse dates
+    try:
+        if pickup_date:
+            pickup_date_obj = datetime.strptime(pickup_date, '%Y-%m-%d')
+        else:
+            pickup_date_obj = None
+    except Exception:
+        pickup_date_obj = None
+        pickup_date = None
+    try:
+        if dropoff_date:
+            dropoff_date_obj = datetime.strptime(dropoff_date, '%Y-%m-%d')
+        else:
+            dropoff_date_obj = None
+    except Exception:
+        dropoff_date_obj = None
+        dropoff_date = None
 
+    # Example: Query cars by category (add date logic as needed)
+    query = {}
+    if category:
+        query['categorie'] = category  # Adjust field name to match your DB
+
+    cars_collection = db['auto']
+    cars = list(cars_collection.find(query))
+
+    # Render a results page (e.g., search_results.html) with the filtered cars
+    return render_template('search_results.html', cars=cars, pickup_date=pickup_date, dropoff_date=dropoff_date, category=category)
 

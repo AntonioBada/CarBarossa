@@ -10,7 +10,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Liste des managers</title>
+    <title>Lista degli amministratori</title>
 
     <!-- Fontfaces CSS-->
     <link href="/static/DatatableAssets/css/font-face.css" rel="stylesheet" media="all">
@@ -84,326 +84,69 @@
     }
 </style>
 
-<body class="animsition">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white flex-column border-0  ">
-        <div class="container-fluid">
-            <div class="w-100">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
 
-                    <!-- Logo-->
-                    <a class="navbar-brand fw-bold fs-3 m-0 p-0 flex-shrink-0 order-0" href="/cars">
-                        <div class="d-flex align-items-center">
-                            <svg class="f-w-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 77.53 72.26">
-                                <path
-                                    d="M10.43,54.2h0L0,36.13,10.43,18.06,20.86,0H41.72L10.43,54.2Zm67.1-7.83L73,54.2,68.49,62,45,48.47,31.29,72.26H20.86l-5.22-9L52.15,0H62.58l5.21,9L54.06,32.82,77.53,46.37Z"
-                                    fill="currentColor" fill-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </a>
-                    <!-- / Logo-->
-
-                    <!-- Navbar Icons-->
-                    <ul class="list-unstyled mb-0 d-flex align-items-center order-1 order-lg-2 nav-sidelinks">
-
-
-                        <!-- Navbar Search-->
-                        <li class="d-none d-sm-block">
-                            <a href="/logout" class="nav-link text-body search-trigger cursor-pointer">Logout</a>
-
-
-
-                        </li>
-                        <!-- /Navbar Search-->
-
-                        <!-- Navbar Login-->
-                        <li class="ms-1 d-none d-lg-inline-block">
-                            <a class="nav-link text-body" href="/dashboardTest">
-                                Dashboard
-                            </a>
-                        </li>
-                        <!-- /Navbar Login-->
-
-
-                    </ul>
-                    <!-- Navbar Icons-->
-
-                    <!-- Main Navigation-->
-                    <div class="flex-shrink-0 collapse navbar-collapse navbar-collapse-light w-auto flex-grow-1 order-2 order-lg-1"
-                        id="navbarNavDropdown">
-
-                        <!-- Menu-->
-                        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-
-                            <li class="nav-item dropdown">
-                                <a href="/clients" class="nav-link dropdown-toggle" role="button">
-                                    Gestion Clients
-                                </a>
-
-                            </li>
-                            <li class=" nav-item">
-                                <a class="nav-link" href="/gestion_reservations" role="button">
-                                    Gestion Réservations
-                                </a>
-                            </li>
-                            <li class=" nav-item">
-                                <a class="nav-link" href="/manage_cars" role="button">
-                                    Gestion voitures
-                                </a>
-                            </li>
-
-                            {% if session.get('role') == 'admin' %}
-
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Gestion Users
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/admin">Admin</a></li>
-                                    <li><a class="dropdown-item" href="/manager">Manager</a></li>
-
-                                </ul>
-                            </li>
-                            {% endif %}
-
-
-
-                        </ul> <!-- / Menu-->
-
-                    </div>
-                    <!-- / Main Navigation-->
-
-                </div>
+<body class="bg-light" style="min-height:100vh;">
+    <section class="hero-section d-flex align-items-center justify-content-center" style="background: linear-gradient(120deg, #4272d7 0%, #17a2b8 50%, #ffc107 100%); min-height: 40vh; position:relative; overflow:hidden;">
+        <div class="container text-center py-5 position-relative" style="z-index:2;">
+            <div class="mb-4">
+                <span class="rounded-circle shadow-lg d-inline-block glass-effect" style="background:rgba(255,255,255,0.18); padding:38px; border:2px solid #fff;">
+                    <img src="/static/images/logos/logo1.png" alt="Logo CarBarossa" style="width:80px; height:80px; object-fit:contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));">
+                </span>
             </div>
+            <h1 class="display-3 fw-bold text-white mb-2 animate__animated animate__fadeInDown">Area Amministratore</h1>
+            <p class="lead text-white-50 mb-0 animate__animated animate__fadeInUp animate__delay-1s">Gestisci tutte le sezioni del portale CarBarossa con stile</p>
         </div>
-    </nav>
-    <div class="page-wrapper">
-        <!-- HEADER MOBILE-->
-        <header class="header-mobile d-block d-lg-none">
-            <div class="header-mobile__bar">
-                <div class="container-fluid">
-                    <div class="header-mobile-inner">
-                        <a class="logo" href="index.html">
-                            <img src="images/icon/logo.png" alt="CoolAdmin" />
-                        </a>
-                        <button class="hamburger hamburger--slider" type="button">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
+        <div class="hero-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;background: url('/static/images/banners/admin-bg.svg') center/cover no-repeat;opacity:0.08;z-index:1;"></div>
+    </section>
+    <div class="container py-5">
+        <div class="row justify-content-center g-4">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <a href="/clients" class="btn btn-lg w-100 py-4 shadow-lg glass-effect admin-btn d-flex align-items-center justify-content-center gap-2" style="font-size:1.3rem; background: linear-gradient(90deg,#4272d7 60%,#17a2b8 100%); color:#393939; border:none; transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 8px 32px rgba(66,114,215,0.18)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(66,114,215,0.10)';">
+                    <i class="fa fa-users fa-lg me-2"></i> Gestione Clienti
+                </a>
             </div>
-        </header>
-
-
-        <!-- PAGE CONTAINER-->
-        <div class="page-container">
-
-
-            <!-- MAIN CONTENT-->
-            <div class="main-content">
-                <div class="section__content section__content--p30">
-                    <div class="container-fluid">
-
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- DATA TABLE -->
-
-                                <div class="table-data__tool">
-                                    <div class="table-data__tool-left">
-                                        <h3 class="title-5 m-b-35">Liste des admins</h3>
-
-                                    </div>
-                                    <div class="table-data__tool-right">
-                                        <a href="{{ url_for('addAdmin') }}"
-                                            class="au-btn au-btn-icon au-btn--green au-btn--small">
-                                            <i class="zmdi zmdi-plus"></i> Ajouter Un Nouveau admin
-                                        </a>
-
-                                    </div>
-                                </div>
-                                <div class="table-responsive table-responsive-data2">
-                                    <table class="table table-data2">
-                                        <thead>
-                                            <tr>
-                                                <th>CIN</th>
-                                                <th>Nom</th>
-                                                <th>Prenom</th>
-                                                <th>Email</th>
-                                                <th>Telephone</th>
-                                                <th>Address</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for client in clients %}
-                                            <tr class="tr-shadow">
-                                                <td>{{ client._id }} </td>
-                                                <td>{{ client.nom }} </td>
-                                                <td> {{ client.prenom }}</td>
-                                                <td>
-                                                    <span class="block-email">{{ client.email }}</span>
-                                                </td>
-                                                <td>
-                                                    <span class="block-email">{{ client.tel }}</span>
-                                                </td>
-                                                <td>{{ client.ville }}</td>
-
-                                                <td>
-                                                    <div class="table-data-feature">
-                                                        <button class="item" data-toggle="tooltip" data-placement="top"
-                                                            title="Reserver pour ce client">
-                                                            <i class="zmdi zmdi-mail-send"></i>
-                                                        </button>
-
-
-
-                                                        <input type="hidden" name="idClient" value="{{ client._id }}">
-                                                        <button class="item" data-toggle="tooltip" data-placement="top"
-                                                            title="Modifier"
-                                                            onclick="showModal(); fillModalInputs('{{ client._id }}','{{ client.nom }}', '{{ client.prenom }}', '{{ client.email }}', '{{ client.tel }}', '{{ client.ville }}')">
-                                                            <i class="zmdi zmdi-edit"></i>
-                                                        </button>
-
-
-
-                                                        <form method="POST" action="/deleteManager">
-                                                            <input type="hidden" name="idClient"
-                                                                value="{{ client._id }}">
-                                                            <button class="item" data-toggle="tooltip"
-                                                                data-placement="top" title="Supprimer" type="submit">
-                                                                <i class="zmdi zmdi-delete"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="spacer"></tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-
-
-                                </div>
-                                <!-- END DATA TABLE -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <a href="/gestion_reservations" class="btn btn-lg w-100 py-4 shadow-lg glass-effect admin-btn d-flex align-items-center justify-content-center gap-2" style="font-size:1.3rem; background: linear-gradient(90deg,#28a745 60%,#17a2b8 100%); color:#393939; border:none; transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 8px 32px rgba(40,167,69,0.18)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(40,167,69,0.10)';">
+                    <i class="fa fa-calendar-check fa-lg me-2"></i> Gestione Prenotazioni
+                </a>
             </div>
-        </div>
-
-    </div>
-
-
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <!-- Form to modify client information -->
-            <form method="POST" action="{{ url_for('modify_admin') }}">
-                <div class="form-group">
-                    <label class="form-label" for="register-id">CIN</label>
-
-                    <input type="text" name="CIN" class="form-control" id="register-CIN" placeholder="Entrer CIN"
-                        readonly>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="register-nom">Nom</label>
-                    <input type="text" class="form-control" id="register-nom" name="nom" placeholder="Entrer Nom">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="register-prenom">Prenom</label>
-                    <input type="text" class="form-control" id="register-prenom" name="prenom"
-                        placeholder="Enter Prenom">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="register-email">Adresse email</label>
-                    <input type="email" class="form-control" id="register-email" name="email"
-                        placeholder="Entrer un email">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="register-telephone">Telephone</label>
-                    <input type="text" class="form-control" id="register-telephone" name="telephone"
-                        placeholder="Entrer numero telephone">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="register-adresse">Adresse</label>
-                    <input type="text" class="form-control" id="register-adresse" name="ville"
-                        placeholder="Entrer adresse">
-                </div>
-                <button type="submit" class="btn btn-dark d-block w-100 my-4">Modifier Admin</button>
-            </form>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <a href="/manage_cars" class="btn btn-lg w-100 py-4 shadow-lg glass-effect admin-btn d-flex align-items-center justify-content-center gap-2" style="font-size:1.3rem; background: linear-gradient(90deg,#ffc107 60%,#ff8300 100%); color:#393939; border:none; transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 8px 32px rgba(255,193,7,0.18)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(255,193,7,0.10)';">
+                    <i class="fa fa-car fa-lg me-2"></i> Gestione Auto
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <a href="/" class="btn btn-lg w-100 py-4 shadow-lg glass-effect admin-btn d-flex align-items-center justify-content-center gap-2" style="font-size:1.3rem; background: linear-gradient(90deg,#ff8300 60%,#ffc107 100%); color:#393939; border:none; transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 8px 32px rgba(255,193,7,0.18)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(255,193,7,0.10)';">
+                    <i class="fa fa-home fa-lg me-2"></i> Home
+                </a>
+            </div>
         </div>
     </div>
-
-
-
-    <!-- Jquery JS-->
-    <script src="/static/DatatableAssets/vendor/jquery-3.2.1.min.js"></script>
-    <!-- Bootstrap JS-->
-    <script src="/static/DatatableAssets/vendor/bootstrap-4.1/popper.min.js"></script>
-    <script src="/static/DatatableAssets/vendor/bootstrap-4.1/bootstrap.min.js"></script>
-    <!-- Vendor JS       -->
-    <script src="/static/DatatableAssets/vendor/slick/slick.min.js">
-    </script>
-    <script src="/static/DatatableAssets/vendor/wow/wow.min.js"></script>
-    <script src="/static/DatatableAssets/vendor/animsition/animsition.min.js"></script>
-    <script src="/static/DatatableAssets/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
-    </script>
-    <script src="/static/DatatableAssets/vendor/counter-up/jquery.waypoints.min.js"></script>
-    <script src="/static/DatatableAssets/vendor/counter-up/jquery.counterup.min.js">
-    </script>
-    <script src="/static/DatatableAssets/vendor/circle-progress/circle-progress.min.js"></script>
-    <script src="/static/DatatableAssets/vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script src="/static/DatatableAssets/vendor/chartjs/Chart.bundle.min.js"></script>
-    <script src="/static/DatatableAssets/vendor/select2/select2.min.js">
-    </script>
-
-    <!-- Main JS-->
-    <script src="/static/DatatableAssets/js/main.js"></script>
-    <script>
-        function fillModalInputs(CIN, nom, prenom, email, telephone, adresse) {
-            document.getElementById("register-CIN").value = CIN;
-            document.getElementById("register-nom").value = nom;
-            document.getElementById("register-prenom").value = prenom;
-            document.getElementById("register-email").value = email;
-            document.getElementById("register-telephone").value = telephone;
-            document.getElementById("register-adresse").value = adresse;
+    <style>
+        .glass-effect {
+            backdrop-filter: blur(8px);
+            background: rgba(255,255,255,0.18)!important;
+            border-radius: 18px;
         }
-
-        function showModal() {
-            var modal = document.getElementById("myModal");
-            modal.style.display = "block";
+        .admin-btn {
+            box-shadow: 0 4px 16px rgba(66,114,215,0.10);
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
-
-        function closeModal() {
-            var modal = document.getElementById("myModal");
-            modal.style.display = "none";
+        .admin-btn i {
+            transition: color .2s, transform .2s;
         }
-
-        // Wait for the DOM to be fully loaded
-        document.addEventListener("DOMContentLoaded", function () {
-            // Get the update form element
-            var updateForm = document.getElementById("modifyClientForm");
-
-            // Add an event listener to the form's submit event
-            updateForm.addEventListener("submit", function (event) {
-                // Prevent the default form submission
-                event.preventDefault();
-
-                // Perform any additional processing or validation here
-
-                // Close the modal after the form is submitted
-                closeModal();
-
-                // Submit the form programmatically
-                updateForm.submit();
-            });
-        });
-    </script>
-
+        .admin-btn:hover i {
+            color: #ffc107;
+            transform: scale(1.2) rotate(-8deg);
+        }
+        .hero-section h1, .hero-section p {
+            text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        @media (max-width: 767px) {
+            .hero-section h1 { font-size:2.2rem; }
+            .admin-btn { font-size:1rem!important; }
+        }
+    </style>
 </body>
-
 </html>
-<!-- end document-->

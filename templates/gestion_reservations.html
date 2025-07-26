@@ -51,7 +51,7 @@
     </noscript>
 
     <!-- Page Title -->
-    <title>Reservations</title>
+    <title>Gestione Prenotazioni</title>
 
 
 
@@ -140,18 +140,18 @@
 
                             <li class="nav-item dropdown">
                                 <a href="/clients" class="nav-link dropdown-toggle" role="button">
-                                    Gestion Clients
+                                    Gestione Clienti
                                 </a>
 
                             </li>
                             <li class=" nav-item">
                                 <a class="nav-link" href="/gestion_reservations" role="button">
-                                    Gestion Réservations
+                                    Gestione Prenotazioni
                                 </a>
                             </li>
                             <li class=" nav-item">
                                 <a class="nav-link" href="/manage_cars" role="button">
-                                    Gestion voitures
+                                    Gestione Auto
                                 </a>
                             </li>
 
@@ -160,12 +160,11 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    Gestion Users
+                                    Gestione Utenti
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/admin">Admin</a></li>
+                                    <li><a class="dropdown-item" href="/admin">Amministratori</a></li>
                                     <li><a class="dropdown-item" href="/manager">Manager</a></li>
-
                                 </ul>
                             </li>
                             {% endif %}
@@ -191,7 +190,7 @@
         <div class="py-10 bg-img-cover bg-overlay-dark position-relative overflow-hidden bg-pos-center-center rounded-0"
             style="background-image: url(../static/images/banners/merc.jpg);">
             <div class="container-fluid position-relative z-index-20" data-aos="fade-right" data-aos-delay="300">
-                <h1 class="fw-bold display-6 mb-4 text-white">Gestion Reservations</h1>
+                <h1 class="fw-bold display-6 mb-4 text-white">Gestione Prenotazioni</h1>
                 <div class="col-12 col-md-6">
                 </div>
             </div>
@@ -202,7 +201,7 @@
             <!-- Category Toolbar-->
             <div class="d-flex justify-content-between items-center pt-5 pb-4 flex-column flex-lg-row">
                 <div>
-                    <h1 class="fw-bold fs-3 mb-2">Gestion Reservations</h1>
+                    <h1 class="fw-bold fs-3 mb-2">Gestione Prenotazioni</h1>
                 </div>
             </div> <!-- /Category Toolbar-->
 
@@ -214,23 +213,26 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Reservation ID</th>
-                            <th>Client ID</th>
-                            <th>voiture ID</th>
-                            <th>Date Debut</th>
-                            <th>Date Fin</th>
-                            <th>Prix Reservation</th>
-                            <th>Status</th>
-
-                            <th>Actions</th>
+                            <th>ID Prenotazione</th>
+                            <th>Nome</th>
+                            <th>Cognome</th>
+                            <th>Marca</th>
+                            <th>Modello</th>
+                            <th>Data Inizio</th>
+                            <th>Data Fine</th>
+                            <th>Prezzo Totale</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for reservation in reservations %}
                         <tr>
                             <td>{{ reservation._id }}</td>
-                            <td>{{ reservation.client_id }}</td>
-                            <td>{{ reservation.voiture_id }}</td>
+                            <td>{{ reservation.nome }}</td>
+                            <td>{{ reservation.cognome }}</td>
+                            <td>{{ reservation.marque }}</td>
+                            <td>{{ reservation.modele }}</td>
                             <td>{{ reservation.date_debut }}</td>
                             <td>{{ reservation.date_fin }}</td>
                             <td>{{ reservation.prix_reservation }}</td>
@@ -239,8 +241,8 @@
                             <td class="actions">
                                 <form action="/gestion_reservations" method="POST">
                                     <input type="hidden" name="reservation_id" value="{{ reservation._id }}">
-                                    <button type="submit" name="action" value="accepter">Accept</button>
-                                    <button type="submit" name="action" value="refuser">Refuse</button>
+                                    <button type="submit" name="action" value="accepter">Accetta</button>
+                                    <button type="submit" name="action" value="refuser">Rifiuta</button>
                                 </form>
                             </td>
                         </tr>
