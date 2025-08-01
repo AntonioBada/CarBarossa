@@ -179,4 +179,5 @@ def gestion_reservations():
     return render_template('gestion_reservations.html', reservations=enriched_reservations)
 
 if __name__ == "__main__":
-    app.run(port=80, debug=True)
+    port = int(os.environ.get('PORT', 80))
+    app.run(host='0.0.0.0', port=port, debug=True)
