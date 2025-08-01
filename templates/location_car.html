@@ -34,6 +34,15 @@
 
   <!-- Main CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}" />
+  <style>
+    body, html, * {
+      font-family: Helvetica, Arial, sans-serif !important;
+    }
+    body {
+      background: #fff;
+      min-height: 100vh;
+    }
+  </style>
 
 
 
@@ -61,29 +70,27 @@
 
 
 
+<!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <a class="nav-link" href="/" style="font-family: Helvetica, Arial, sans-serif !important; font-weight:600; color:#222; font-size:1.1rem;">Home</a>
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='images/logos/logo1.png') }}" alt="CarBarossa" height="54" style="margin-left:10px;">
+            </div>
+        </div>
+    </nav>
 
 
-
-  <!-- Navbar -->
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white flex-column border-0  ">
-
-  </nav>
-  <!-- / Navbar--> <!-- / Navbar-->
+  
 
   <!-- Main Section-->
   <section class="mt-0 ">
     <!-- Page Content Goes Here -->
 
     <!-- Breadcrumbs-->
-    <div class="bg-dark py-6">
-      <div class="container-fluid">
-        <nav class="m-0" aria-label="breadcrumb">
-          <ol class="breadcrumb m-0">
-            <h3 class="breadcrumb-item  breadcrumb-light active" aria-current="page">location de voiture</h3>
-          </ol>
-        </nav>
-      </div>
+    <div style="background: linear-gradient(120deg, #ff9800 0%, #df8602 50%, #ff9800 100%);" class="py-6">
     </div>
     <!-- / Breadcrumbs-->
 
@@ -125,8 +132,9 @@
               height: 240px;
               object-fit: cover;
               border-radius: 14px;
-              box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+              box-shadow: 0 2px 16px rgba(0,123,255,0.10);
               background: #fff;
+              border: none;
             }
             @media (max-width: 900px) {
               .car-image-custom { max-width: 100%; height: 180px; }
@@ -168,7 +176,6 @@
         <div class="col-12 col-md-6 col-lg-5">
           <div class="sticky-top top-5">
             <div class="pb-3" data-aos="fade-in">
-              <a href="/" class="btn btn-outline-primary mb-3">&larr; Torna alla Home</a>
               <h1 class="mb-1 fs-2 fw-bold">{{auto.modello}} {{auto.marca}}</h1>
               <div class="d-flex justify-content-between align-items-center">
                 <p class="fs-4 m-0">{{auto.prezzo}} €/giorno</p>
@@ -201,13 +208,13 @@
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
                 <style>
                   .flatpickr-day.blocked, .flatpickr-day.blocked:hover {
-                    background: #e74c3c !important;
+                    background: #e30613 !important;
                     color: #fff !important;
                     border-radius: 50% !important;
                     cursor: not-allowed !important;
                   }
                   .flatpickr-day.available, .flatpickr-day.available:hover {
-                    background: #27ae60 !important;
+                    background: #007bff !important;
                     color: #fff !important;
                     border-radius: 50% !important;
                   }
@@ -216,6 +223,11 @@
                     color: #888 !important;
                     border-radius: 50% !important;
                     cursor: not-allowed !important;
+                  }
+                  .flatpickr-day.selected-start {
+                    background: #ff9800 !important;
+                    color: #fff !important;
+                    border: 2px solid #ffb74d !important;
                   }
                 </style>
                 <!-- Flatpickr JS -->
@@ -233,6 +245,7 @@
                   // Oggi (usato per colorare i giorni passati)
                   const today = new Date();
                   today.setHours(0,0,0,0);
+                  let selectedStart = null;
                   // Flatpickr per Data Inizio
                   flatpickr("#date_debut", {
                     dateFormat: "Y-m-d",
@@ -253,10 +266,22 @@
                       // Aggiorna la minDate di fine
                       if (selectedDates.length > 0) {
                         dateFinPicker.set('minDate', dateStr);
+                        selectedStart = dateStr;
                         // Se la data di fine è prima della data di inizio, resetta
                         if (dateFinPicker.input.value && dateFinPicker.input.value < dateStr) {
                           dateFinPicker.clear();
                         }
+                        // Evidenzia la data selezionata nel selettore di fine
+                        setTimeout(() => {
+                          const days = document.querySelectorAll(".flatpickr-calendar:last-of-type .flatpickr-day");
+                          days.forEach(day => {
+                            if (day.dateObj && formatDate(day.dateObj) === selectedStart) {
+                              day.classList.add('selected-start');
+                            } else {
+                              day.classList.remove('selected-start');
+                            }
+                          });
+                        }, 100);
                       }
                     }
                   });
@@ -274,6 +299,9 @@
                         dayElem.classList.add('blocked');
                       } else {
                         dayElem.classList.add('available');
+                      }
+                      if (selectedStart && dateStr === selectedStart) {
+                        dayElem.classList.add('selected-start');
                       }
                     }
                   });

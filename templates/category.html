@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
     <style>
+        body, html, * {
+            font-family: Helvetica, Arial, sans-serif !important;
+        }
         body {
             background: url('{{ url_for('static', filename='images/logos/sfondo.png') }}') no-repeat center center fixed;
             background-size: cover;
@@ -24,10 +27,12 @@
 
         .cars-title {
             text-align: center;
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             font-weight: bold;
-            color: #007bff;
+            color: #222;
+            text-transform: uppercase;
             margin-bottom: 2.2rem;
+            margin-top: 0.5rem;
         }
 
         .cars-grid {
@@ -98,26 +103,18 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='images/logos/logo1.png') }}" alt="CarBarossa" height="40"
-                    style="margin-right:10px;">
-                <span style="font-weight:600; color:#222;">CarBarossa</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                </ul>
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <a class="nav-link" href="/" style="font-family: Helvetica, Arial, sans-serif !important; font-weight:600; color:#222; font-size:1.1rem;">Home</a>
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='images/logos/logo1.png') }}" alt="CarBarossa" height="54" style="margin-left:10px;">
             </div>
         </div>
     </nav>
 
     <section class="cars-section">
-        <div class="cars-title">Le nostre macchine</div>
+        <div class="cars-title">LE NOSTRE MACCHINE</div>
         <div class="cars-grid">
             {% if cars and cars|length > 0 %}
                 {% for car in cars %}

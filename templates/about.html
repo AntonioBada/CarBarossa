@@ -6,7 +6,10 @@
   <title>About Us - CarBarossa</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
-  <style>
+    <style>
+        body, html, * {
+            font-family: Helvetica, Arial, sans-serif !important;
+        }
     body {
       background: url('{{ url_for('static', filename='images/logos/sfondo.png') }}') no-repeat center center fixed;
       background-size: cover;
