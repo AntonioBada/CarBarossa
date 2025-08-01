@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Area Admin - CarBarossa</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
+  <style>
+    body { background: #f8f9fa; }
+    .login-section {
+      max-width: 400px;
+      margin: 80px auto 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      padding: 2.5rem 2rem 2rem 2rem;
+    }
+    .login-title {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 1.5rem;
+    }
+    .form-label { font-weight: 600; }
+    .form-control { margin-bottom: 1.2rem; }
+    .error-msg { color: #e74c3c; text-align: center; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <section class="login-section">
+    <div class="login-title">Login Area Admin</div>
+    {% if error %}
+      <div class="error-msg">{{ error }}</div>
+    {% endif %}
+    <form method="POST">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" id="username" name="username" class="form-control" required>
+      <label for="password" class="form-label">Password</label>
+      <input type="password" id="password" name="password" class="form-control" required>
+      <button type="submit" class="btn btn-primary w-100">Accedi</button>
+    </form>
+  </section>
+</body>
+</html>

@@ -30,6 +30,29 @@ except :
 def blade() : 
     return render_template("login.html")
 
+##################################### PAGINA ABOUT US E AREA ADMIN PROTETTA ###############################
+
+# About Us
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+# Area Admin protetta
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username == 'Barbarossa' and password == 'Carollo':
+            session['is_admin'] = True
+            return render_template('gestion_reservations.html')  # crea questa pagina o modifica come preferisci
+        else:
+            return render_template('admin_login.html', error='Credenziali errate')
+    else:
+        if session.get('is_admin'):
+            return render_template('gestion_reservations.html')
+        return render_template('admin_login.html')
 
 #AUTHENTIFICATION 
 
@@ -444,6 +467,7 @@ reservation_collection = db['reservation']
 
 @app.route("/location_car/<voiture_id>", methods=['GET', 'POST'])
 def location_car(voiture_id):
+    from datetime import timedelta
     if request.method == 'POST':
         date_debut_str = request.form.get('date_debut')
         date_fin_str = request.form.get('date_fin')
@@ -459,30 +483,108 @@ def location_car(voiture_id):
             date_debut = datetime.strptime(date_debut_str, "%Y-%m-%d")
             date_fin = datetime.strptime(date_fin_str, "%Y-%m-%d")
             oggi = datetime.now().date()
-            if date_debut.date() <= oggi:
+            if date_debut.date() < oggi:
                 return render_template("location_car.html", voiture_id=voiture_id, auto=auto, error_message="Non è possibile prenotare per oggi o per una data passata.")
             diff_days = (date_fin - date_debut).days
-            price = diff_days * auto.get('prezzo', 0)
+            diff_days += 1
+            prezzo_auto = auto.get('prezzo', 0)
+            price = diff_days * prezzo_auto
             statut = request.form.get('statut', 'en_attente')
+            # Nuovi campi dal form
+            nome = request.form.get('nome')
+            cognome = request.form.get('cognome')
+            email = request.form.get('email')
             reservation = {
                 'auto_id': voiture_id,
                 'date_debut': date_debut,
                 'date_fin': date_fin,
                 'prix_reservation': price,
-                'statut': statut
+                'statut': statut,
+                'marque': auto.get('marca', ''),
+                'modele': auto.get('modello', ''),
+                'prezzo': prezzo_auto,
+                'nome': nome,
+                'cognome': cognome,
+                'email': email
             }
             reservation_collection.insert_one(reservation)
             # Mostra la stessa pagina con messaggio di successo
-            return render_template("location_car.html", voiture_id=voiture_id, auto=auto, success_message="Prenotazione avvenuta con successo!")
+            # Calcola giorni bloccati per questa auto (prenotazioni accettate)
+            prenotazioni_accettate = reservation_collection.find({
+                "auto_id": voiture_id,
+                "statut": "accettata"
+            })
+            giorni_bloccati = []
+            for pren in prenotazioni_accettate:
+                start = pren['date_debut']
+                end = pren['date_fin']
+                if isinstance(start, str):
+                    try:
+                        start = datetime.strptime(start, "%Y-%m-%d")
+                    except:
+                        continue
+                if isinstance(end, str):
+                    try:
+                        end = datetime.strptime(end, "%Y-%m-%d")
+                    except:
+                        continue
+                while start <= end:
+                    giorni_bloccati.append(start.strftime("%Y-%m-%d"))
+                    start += timedelta(days=1)
+            return render_template("location_car.html", voiture_id=voiture_id, auto=auto, success_message="Prenotazione avvenuta con successo!", giorni_bloccati=giorni_bloccati)
         except Exception as e:
             print(f"Errore nella ricerca auto: {e}")
-            return render_template("location_car.html", voiture_id=voiture_id, auto=None, error_message="Errore nella ricerca auto.")
+            # Calcola giorni bloccati anche in caso di errore
+            prenotazioni_accettate = reservation_collection.find({
+                "auto_id": voiture_id,
+                "statut": "accettata"
+            })
+            giorni_bloccati = []
+            for pren in prenotazioni_accettate:
+                start = pren['date_debut']
+                end = pren['date_fin']
+                if isinstance(start, str):
+                    try:
+                        start = datetime.strptime(start, "%Y-%m-%d")
+                    except:
+                        continue
+                if isinstance(end, str):
+                    try:
+                        end = datetime.strptime(end, "%Y-%m-%d")
+                    except:
+                        continue
+                while start <= end:
+                    giorni_bloccati.append(start.strftime("%Y-%m-%d"))
+                    start += timedelta(days=1)
+            return render_template("location_car.html", voiture_id=voiture_id, auto=None, error_message="Errore nella ricerca auto.", giorni_bloccati=giorni_bloccati)
     clients = db['client'].find()
     # Logga tutti gli ID delle auto presenti
     all_autos = list(db['auto'].find())
     print('ID auto presenti nel database:')
     for a in all_autos:
         print(a['_id'])
+    # Calcola giorni bloccati per questa auto (prenotazioni accettate)
+    prenotazioni_accettate = reservation_collection.find({
+        "auto_id": voiture_id,
+        "statut": "accettata"
+    })
+    giorni_bloccati = []
+    for pren in prenotazioni_accettate:
+        start = pren['date_debut']
+        end = pren['date_fin']
+        if isinstance(start, str):
+            try:
+                start = datetime.strptime(start, "%Y-%m-%d")
+            except:
+                continue
+        if isinstance(end, str):
+            try:
+                end = datetime.strptime(end, "%Y-%m-%d")
+            except:
+                continue
+        while start <= end:
+            giorni_bloccati.append(start.strftime("%Y-%m-%d"))
+            start += timedelta(days=1)
     # Prova a convertire l'id in ObjectId, se fallisce usa la stringa
     try:
         obj_id = ObjectId(voiture_id)
@@ -491,21 +593,8 @@ def location_car(voiture_id):
         voitures = db['auto'].find_one({"_id": voiture_id})
     print(f"ID cercato (GET): {voiture_id}, auto trovata: {voitures}")
     if not voitures:
-        return render_template("location_car.html", clients=clients, voiture_id=voiture_id, auto=None, error_message="Auto non trovata. Controlla l'ID o i dati nel database.")
-    return render_template("location_car.html", clients=clients, voiture_id=voiture_id, auto=voitures)
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return render_template("location_car.html", clients=clients, voiture_id=voiture_id, auto=None, error_message="Auto non trovata. Controlla l'ID o i dati nel database.", giorni_bloccati=giorni_bloccati)
+    return render_template("location_car.html", clients=clients, voiture_id=voiture_id, auto=voitures, giorni_bloccati=giorni_bloccati)
 
 
 # Route to display all reservations and handle accept/refuse functionality
@@ -523,8 +612,8 @@ def gestion_reservations():
         # return 'Reservation updated successfully!'
     
             
-    # Fetch all reservations from the collection
-    reservations_raw = list(reservation_collection.find({"statut": "en_attente"}))
+    # Fetch all reservations with status 'en_attente' or 'accettata'
+    reservations_raw = list(reservation_collection.find({"statut": {"$in": ["en_attente", "accettata"]}}))
     enriched_reservations = []
     for reservation in reservations_raw:
         # Recupera l'auto associata
@@ -534,10 +623,38 @@ def gestion_reservations():
         except Exception:
             auto_obj_id = auto_id
         auto = db['auto'].find_one({'_id': auto_obj_id})
-        # Inserisci marca e modello se disponibili
-        reservation['marque'] = auto.get('marque', '') if auto else ''
-        reservation['modele'] = auto.get('modele', '') if auto else ''
-        enriched_reservations.append(reservation)
+        # Marca e modello
+        marque = reservation.get('marque') or (auto.get('marque') if auto else '')
+        modele = reservation.get('modele') or (auto.get('modele') if auto else '')
+        # Calcolo prezzo totale
+        date_debut = reservation.get('date_debut')
+        date_fin = reservation.get('date_fin')
+        if isinstance(date_debut, str):
+            try:
+                date_debut = datetime.strptime(date_debut, "%Y-%m-%d")
+            except:
+                date_debut = None
+        if isinstance(date_fin, str):
+            try:
+                date_fin = datetime.strptime(date_fin, "%Y-%m-%d")
+            except:
+                date_fin = None
+        prix_reservation = reservation.get('prix_reservation')
+        if (not prix_reservation or prix_reservation == 0) and auto and date_debut and date_fin:
+            diff_days = (date_fin - date_debut).days
+            prix_reservation = diff_days * auto.get('prezzo', 0)
+        enriched_reservations.append({
+            '_id': reservation.get('_id'),
+            'email': reservation.get('email', ''),
+            'nome': reservation.get('nome', ''),
+            'cognome': reservation.get('cognome', ''),
+            'marque': marque,
+            'modele': modele,
+            'date_debut': date_debut.strftime('%d/%m/%Y') if date_debut else '',
+            'date_fin': date_fin.strftime('%d/%m/%Y') if date_fin else '',
+            'prix_reservation': prix_reservation,
+            'statut': reservation.get('statut', '')
+        })
 
     return render_template('gestion_reservations.html', reservations=enriched_reservations)
 

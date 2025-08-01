@@ -178,12 +178,106 @@
 
               <form action="/location_car/{{ auto._id }}" method="POST">
                 <div class="mb-3">
+                  <label for="nome" class="form-label">Nome</label>
+                  <input type="text" id="nome" name="nome" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label for="cognome" class="form-label">Cognome</label>
+                  <input type="text" id="cognome" name="cognome" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
                   <label for="date_debut" class="form-label">Data inizio</label>
-                  <input type="date" class="form-control" id="date_debut" name="date_debut">
+                  <input type="text" id="date_debut" name="date_debut" class="form-control" required readonly>
                 </div>
                 <div class="mb-3">
                   <label for="date_fin" class="form-label">Data fine</label>
-                  <input type="date" class="form-control" id="date_fin" name="date_fin">
+                  <input type="text" id="date_fin" name="date_fin" class="form-control" required readonly>
+                </div>
+                <!-- Flatpickr CSS -->
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+                <style>
+                  .flatpickr-day.blocked, .flatpickr-day.blocked:hover {
+                    background: #e74c3c !important;
+                    color: #fff !important;
+                    border-radius: 50% !important;
+                    cursor: not-allowed !important;
+                  }
+                  .flatpickr-day.available, .flatpickr-day.available:hover {
+                    background: #27ae60 !important;
+                    color: #fff !important;
+                    border-radius: 50% !important;
+                  }
+                  .flatpickr-day.past, .flatpickr-day.past:hover {
+                    background: #ccc !important;
+                    color: #888 !important;
+                    border-radius: 50% !important;
+                    cursor: not-allowed !important;
+                  }
+                </style>
+                <!-- Flatpickr JS -->
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                <script>
+                  // Array delle date bloccate passato dal backend
+                  const giorniBloccati = {{ giorni_bloccati|tojson }};
+                  // Utility per formattare la data in YYYY-MM-DD
+                  function formatDate(date) {
+                    const d = new Date(date);
+                    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+                    const day = d.getDate().toString().padStart(2, '0');
+                    return `${d.getFullYear()}-${month}-${day}`;
+                  }
+                  // Oggi (usato per colorare i giorni passati)
+                  const today = new Date();
+                  today.setHours(0,0,0,0);
+                  // Flatpickr per Data Inizio
+                  flatpickr("#date_debut", {
+                    dateFormat: "Y-m-d",
+                    minDate: today,
+                    disable: giorniBloccati,
+                    onDayCreate: function(dObj, dStr, fp, dayElem) {
+                      const date = dayElem.dateObj;
+                      const dateStr = formatDate(date);
+                      if (date < today) {
+                        dayElem.classList.add('past');
+                      } else if (giorniBloccati.includes(dateStr)) {
+                        dayElem.classList.add('blocked');
+                      } else {
+                        dayElem.classList.add('available');
+                      }
+                    },
+                    onChange: function(selectedDates, dateStr, instance) {
+                      // Aggiorna la minDate di fine
+                      if (selectedDates.length > 0) {
+                        dateFinPicker.set('minDate', dateStr);
+                        // Se la data di fine è prima della data di inizio, resetta
+                        if (dateFinPicker.input.value && dateFinPicker.input.value < dateStr) {
+                          dateFinPicker.clear();
+                        }
+                      }
+                    }
+                  });
+                  // Flatpickr per Data Fine
+                  const dateFinPicker = flatpickr("#date_fin", {
+                    dateFormat: "Y-m-d",
+                    minDate: today,
+                    disable: giorniBloccati,
+                    onDayCreate: function(dObj, dStr, fp, dayElem) {
+                      const date = dayElem.dateObj;
+                      const dateStr = formatDate(date);
+                      if (date < today) {
+                        dayElem.classList.add('past');
+                      } else if (giorniBloccati.includes(dateStr)) {
+                        dayElem.classList.add('blocked');
+                      } else {
+                        dayElem.classList.add('available');
+                      }
+                    }
+                  });
+                </script>
                 </div>
                 <button type="submit" class="btn btn-dark w-100 mt-4 mb-0 hover-lift-sm hover-boxshadow">Prenota</button>
               </form>

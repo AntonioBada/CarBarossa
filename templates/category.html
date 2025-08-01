@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
     <style>
         body {
-            background: #f8f9fa;
+            background: url('{{ url_for('static', filename='images/logos/sfondo.png') }}') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
         }
 
         .cars-section {
@@ -109,7 +111,6 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/search">Controlla Disponibilità</a></li>
                 </ul>
             </div>
         </div>
@@ -124,7 +125,7 @@
                     <img src="{{ url_for('static', filename='images/cars/' ~ car.image) }}" alt="{{ car.marque }} {{ car.modele }}">
                     <h3>{{ car.marque }} {{ car.modele }}</h3>
                     <div class="desc">{{ car.descrizione or 'Auto moderna, affidabile e pronta per il tuo viaggio.' }}</div>
-                    <div class="mb-2 text-primary fw-bold">{{ car.price }} € / giorno</div>
+                    <div class="mb-2 text-primary fw-bold">{{ car.prezzo }} € / giorno</div>
                     <a href="/location_car/{{ car._id }}" class="btn">Prenota Ora</a>
                 </div>
                 {% endfor %}

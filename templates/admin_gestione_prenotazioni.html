@@ -17,7 +17,9 @@
         <table class="table table-bordered table-hover">
             <thead class="table-dark">
                 <tr>
-                    <th>ID Auto</th>
+                    <th>Email</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
                     <th>Data inizio</th>
                     <th>Data fine</th>
                     <th>Prezzo totale</th>
@@ -28,7 +30,9 @@
             <tbody>
                 {% for pren in reservations %}
                 <tr>
-                    <td>{{ pren.auto_id }}</td>
+                    <td>{{ pren.email }}</td>
+                    <td>{{ pren.nome }}</td>
+                    <td>{{ pren.cognome }}</td>
                     <td>{{ pren.date_debut.strftime('%d/%m/%Y') if pren.date_debut }}</td>
                     <td>{{ pren.date_fin.strftime('%d/%m/%Y') if pren.date_fin }}</td>
                     <td>{{ pren.prix_reservation }} €</td>

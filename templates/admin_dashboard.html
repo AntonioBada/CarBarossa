@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Area Admin - CarBarossa</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
+  <style>
+    body { background: #f8f9fa; }
+    .admin-section {
+      max-width: 800px;
+      margin: 60px auto 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      padding: 2.5rem 2rem 2rem 2rem;
+    }
+    .admin-title {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 1.5rem;
+    }
+    .admin-text {
+      font-size: 1.15rem;
+      color: #222;
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <section class="admin-section">
+    <div class="admin-title">Benvenuto nell'Area Admin</div>
+    <div class="admin-text">
+      Qui puoi gestire utenti, auto, prenotazioni e tutte le funzionalità amministrative di CarBarossa.<br><br>
+      Utilizza il menu per navigare tra le varie sezioni di amministrazione.
+    </div>
+  </section>
+</body>
+</html>

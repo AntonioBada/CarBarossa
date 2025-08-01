@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - CarBarossa</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
+  <style>
+    body {
+      background: url('{{ url_for('static', filename='images/logos/sfondo.png') }}') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+    }
+    .about-section {
+      max-width: 800px;
+      margin: 60px auto 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      padding: 2.5rem 2rem 2rem 2rem;
+    }
+    .about-title {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 1.5rem;
+    }
+    .about-text {
+      font-size: 1.15rem;
+      color: #222;
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+    }
+    .about-footer {
+      text-align: center;
+      color: #888;
+      margin-top: 2.5rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="/" style="position: absolute; left: 32px; top: 32px; color: #007bff; font-weight: bold; text-decoration: none; font-size: 1.1rem; background: rgba(255,255,255,0.85); padding: 8px 18px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); z-index: 10;">&larr; Home</a>
+  <section class="about-section">
+    <div class="about-title">Chi siamo - CarBarossa</div>
+    <div class="about-text">
+      <b>CarBarossa</b> nasce dalla passione per la mobilità e il desiderio di offrire un servizio di autonoleggio semplice, trasparente e accessibile a tutti.<br><br>
+      Fondata nel 2025, CarBarossa si propone di rivoluzionare il modo in cui le persone noleggiano un'auto, mettendo al centro la qualità, la sicurezza e la soddisfazione del cliente. Il nostro servizio permette di scegliere tra una vasta gamma di veicoli, adatti a ogni esigenza, con prenotazione rapida e assistenza dedicata.<br><br>
+      La nostra missione è rendere ogni viaggio un'esperienza piacevole, offrendo auto affidabili, prezzi competitivi e un supporto sempre presente. CarBarossa è nata dall'idea di un gruppo di amici che, dopo anni di esperienza nel settore, hanno deciso di creare una realtà innovativa e orientata al cliente.<br><br>
+      Scegli CarBarossa per i tuoi spostamenti: viaggia con stile, comfort e serenità!
+    </div>
+    <div class="about-footer">
+      &copy; 2025 CarBarossa Autonoleggio - Tutti i diritti riservati
+    </div>
+  </section>
+</body>
+</html>
