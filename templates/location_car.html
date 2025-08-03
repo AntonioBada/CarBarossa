@@ -45,6 +45,10 @@
   </style>
 
 
+  <link rel="manifest" href="/manifest.json">
+  <!-- Flatpickr CSS: spostato qui per garantire il caricamento su mobile -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 
   <!-- Fix for custom scrollbar if JS is disabled-->
   <noscript>
@@ -67,7 +71,11 @@
 </head>
 
 <body class="">
-
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js');
+  }
+</script>
 
 
 <!-- Navbar -->
@@ -204,8 +212,7 @@
                   <label for="date_fin" class="form-label">Data fine</label>
                   <input type="text" id="date_fin" name="date_fin" class="form-control" required readonly>
                 </div>
-                <!-- Flatpickr CSS -->
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+                <!-- Flatpickr CSS rimosso: ora nel <head> -->
                 <style>
                   .flatpickr-day.blocked, .flatpickr-day.blocked:hover {
                     background: #e30613 !important;
@@ -233,77 +240,79 @@
                 <!-- Flatpickr JS -->
                 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
                 <script>
-                  // Array delle date bloccate passato dal backend
-                  const giorniBloccati = {{ giorni_bloccati|tojson }};
-                  // Utility per formattare la data in YYYY-MM-DD
-                  function formatDate(date) {
-                    const d = new Date(date);
-                    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-                    const day = d.getDate().toString().padStart(2, '0');
-                    return `${d.getFullYear()}-${month}-${day}`;
-                  }
-                  // Oggi (usato per colorare i giorni passati)
-                  const today = new Date();
-                  today.setHours(0,0,0,0);
-                  let selectedStart = null;
-                  // Flatpickr per Data Inizio
-                  flatpickr("#date_debut", {
-                    dateFormat: "Y-m-d",
-                    minDate: today,
-                    disable: giorniBloccati,
-                    onDayCreate: function(dObj, dStr, fp, dayElem) {
-                      const date = dayElem.dateObj;
-                      const dateStr = formatDate(date);
-                      if (date < today) {
-                        dayElem.classList.add('past');
-                      } else if (giorniBloccati.includes(dateStr)) {
-                        dayElem.classList.add('blocked');
-                      } else {
-                        dayElem.classList.add('available');
-                      }
-                    },
-                    onChange: function(selectedDates, dateStr, instance) {
-                      // Aggiorna la minDate di fine
-                      if (selectedDates.length > 0) {
-                        dateFinPicker.set('minDate', dateStr);
-                        selectedStart = dateStr;
-                        // Se la data di fine è prima della data di inizio, resetta
-                        if (dateFinPicker.input.value && dateFinPicker.input.value < dateStr) {
-                          dateFinPicker.clear();
+                  document.addEventListener('DOMContentLoaded', function() {
+                    // Array delle date bloccate passato dal backend
+                    const giorniBloccati = {{ giorni_bloccati|tojson }};
+                    // Utility per formattare la data in YYYY-MM-DD
+                    function formatDate(date) {
+                      const d = new Date(date);
+                      const month = (d.getMonth() + 1).toString().padStart(2, '0');
+                      const day = d.getDate().toString().padStart(2, '0');
+                      return `${d.getFullYear()}-${month}-${day}`;
+                    }
+                    // Oggi (usato per colorare i giorni passati)
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    let selectedStart = null;
+                    // Flatpickr per Data Inizio
+                    flatpickr("#date_debut", {
+                      dateFormat: "Y-m-d",
+                      minDate: today,
+                      disable: giorniBloccati,
+                      onDayCreate: function(dObj, dStr, fp, dayElem) {
+                        const date = dayElem.dateObj;
+                        const dateStr = formatDate(date);
+                        if (date < today) {
+                          dayElem.classList.add('past');
+                        } else if (giorniBloccati.includes(dateStr)) {
+                          dayElem.classList.add('blocked');
+                        } else {
+                          dayElem.classList.add('available');
                         }
-                        // Evidenzia la data selezionata nel selettore di fine
-                        setTimeout(() => {
-                          const days = document.querySelectorAll(".flatpickr-calendar:last-of-type .flatpickr-day");
-                          days.forEach(day => {
-                            if (day.dateObj && formatDate(day.dateObj) === selectedStart) {
-                              day.classList.add('selected-start');
-                            } else {
-                              day.classList.remove('selected-start');
-                            }
-                          });
-                        }, 100);
+                      },
+                      onChange: function(selectedDates, dateStr, instance) {
+                        // Aggiorna la minDate di fine
+                        if (selectedDates.length > 0) {
+                          dateFinPicker.set('minDate', dateStr);
+                          selectedStart = dateStr;
+                          // Se la data di fine è prima della data di inizio, resetta
+                          if (dateFinPicker.input.value && dateFinPicker.input.value < dateStr) {
+                            dateFinPicker.clear();
+                          }
+                          // Evidenzia la data selezionata nel selettore di fine
+                          setTimeout(() => {
+                            const days = document.querySelectorAll(".flatpickr-calendar:last-of-type .flatpickr-day");
+                            days.forEach(day => {
+                              if (day.dateObj && formatDate(day.dateObj) === selectedStart) {
+                                day.classList.add('selected-start');
+                              } else {
+                                day.classList.remove('selected-start');
+                              }
+                            });
+                          }, 100);
+                        }
                       }
-                    }
-                  });
-                  // Flatpickr per Data Fine
-                  const dateFinPicker = flatpickr("#date_fin", {
-                    dateFormat: "Y-m-d",
-                    minDate: today,
-                    disable: giorniBloccati,
-                    onDayCreate: function(dObj, dStr, fp, dayElem) {
-                      const date = dayElem.dateObj;
-                      const dateStr = formatDate(date);
-                      if (date < today) {
-                        dayElem.classList.add('past');
-                      } else if (giorniBloccati.includes(dateStr)) {
-                        dayElem.classList.add('blocked');
-                      } else {
-                        dayElem.classList.add('available');
+                    });
+                    // Flatpickr per Data Fine
+                    const dateFinPicker = flatpickr("#date_fin", {
+                      dateFormat: "Y-m-d",
+                      minDate: today,
+                      disable: giorniBloccati,
+                      onDayCreate: function(dObj, dStr, fp, dayElem) {
+                        const date = dayElem.dateObj;
+                        const dateStr = formatDate(date);
+                        if (date < today) {
+                          dayElem.classList.add('past');
+                        } else if (giorniBloccati.includes(dateStr)) {
+                          dayElem.classList.add('blocked');
+                        } else {
+                          dayElem.classList.add('available');
+                        }
+                        if (selectedStart && dateStr === selectedStart) {
+                          dayElem.classList.add('selected-start');
+                        }
                       }
-                      if (selectedStart && dateStr === selectedStart) {
-                        dayElem.classList.add('selected-start');
-                      }
-                    }
+                    });
                   });
                 </script>
                 </div>
