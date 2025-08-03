@@ -79,6 +79,7 @@ def location_car(voiture_id):
         nome = request.form.get('nome')
         cognome = request.form.get('cognome')
         email = request.form.get('email')
+        telefono = request.form.get('telefono')
         reservation = {
             'auto_id': voiture_id,
             'date_debut': date_debut,
@@ -90,7 +91,8 @@ def location_car(voiture_id):
             'prezzo': prezzo_auto,
             'nome': nome,
             'cognome': cognome,
-            'email': email
+            'email': email,
+            'telefono': telefono
         }
         reservation_collection.insert_one(reservation)
         # Giorni bloccati
@@ -171,6 +173,7 @@ def gestion_reservations():
             'email': reservation.get('email', ''),
             'nome': reservation.get('nome', ''),
             'cognome': reservation.get('cognome', ''),
+            'telefono': reservation.get('telefono', ''),
             'marque': marque,
             'modele': modele,
             'date_debut': date_debut.strftime('%d/%m/%Y') if date_debut else '',

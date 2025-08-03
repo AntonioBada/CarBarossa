@@ -205,6 +205,11 @@
                   <input type="email" id="email" name="email" class="form-control" required>
                 </div>
                 <div class="mb-3">
+                  <label for="telefono" class="form-label">Telefono</label>
+                  <input type="tel" id="telefono" name="telefono" class="form-control" required pattern="^\\+\\d{2,3}\\d{10}$" placeholder="+39XXXXXXXXXX">
+                  <small class="form-text text-muted">Formato: +39 seguito da 10 cifre</small>
+                </div>
+                <div class="mb-3">
                   <label for="date_debut" class="form-label">Data inizio</label>
                   <input type="text" id="date_debut" name="date_debut" class="form-control" required readonly>
                 </div>
@@ -230,6 +235,8 @@
                     color: #888 !important;
                     border-radius: 50% !important;
                     cursor: not-allowed !important;
+                    pointer-events: none !important;
+                    opacity: 0.7 !important;
                   }
                   .flatpickr-day.selected-start {
                     background: #ff9800 !important;
@@ -264,10 +271,16 @@
                         const dateStr = formatDate(date);
                         if (date < today) {
                           dayElem.classList.add('past');
+                          dayElem.setAttribute('aria-disabled', 'true');
+                          dayElem.setAttribute('tabindex', '-1');
+                          dayElem.classList.add('flatpickr-disabled');
                         } else if (giorniBloccati.includes(dateStr)) {
                           dayElem.classList.add('blocked');
                         } else {
                           dayElem.classList.add('available');
+                        }
+                        if (selectedStart && dateStr === selectedStart) {
+                          dayElem.classList.add('selected-start');
                         }
                       },
                       onChange: function(selectedDates, dateStr, instance) {
