@@ -9,6 +9,7 @@
     <title>Le nostre macchine - CarBarossa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
+    <link rel="manifest" href="/manifest.json">
     <style>
         body, html, * {
             font-family: Helvetica, Arial, sans-serif !important;
@@ -102,6 +103,11 @@
 
 <body>
     <!-- Navbar -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js');
+      }
+    </script>
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-4">
         <div class="container d-flex justify-content-between align-items-center">
             <div>

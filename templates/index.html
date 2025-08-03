@@ -6,6 +6,7 @@
   <title>CarBarossa Autonoleggio</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
+  <link rel="manifest" href="/manifest.json">
     <style>
         body, html, * {
             font-family: Helvetica, Arial, sans-serif !important;
@@ -97,6 +98,11 @@
 </head>
 <body>
   <!-- Logo and Company Name Top Right -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js');
+    }
+  </script>
   <div class="logo-bar">
     <img src="{{ url_for('static', filename='images/logos/logo1.png') }}" alt="CarBarossa Logo">
     <div style="margin-top: 12px; color: #fff; font-size: 0.9rem; font-weight: bold; text-shadow: 0 2px 8px rgba(0,0,0,0.18);">

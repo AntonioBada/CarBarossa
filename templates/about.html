@@ -6,6 +6,7 @@
   <title>About Us - CarBarossa</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/libs.bundle.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.bundle.css') }}">
+  <link rel="manifest" href="/manifest.json">
     <style>
         body, html, * {
             font-family: Helvetica, Arial, sans-serif !important;
@@ -57,5 +58,10 @@
       &copy; 2025 CarBarossa Autonoleggio - Tutti i diritti riservati
     </div>
   </section>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js');
+    }
+  </script>
 </body>
 </html>
