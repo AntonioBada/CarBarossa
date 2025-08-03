@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect, session
 import pymongo
+from pymongo.server_api import ServerApi
 import os
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
@@ -8,15 +9,16 @@ from datetime import datetime
 app = Flask(__name__)
 app.static_folder = 'static'
 app.secret_key = 'HereWegoAgain'
+uri_mongo = "mongodb+srv://antoniobadalamenti5:EtpfbDTE7TqHR4fS@carbarossa.4eqvj0t.mongodb.net/?retryWrites=true&w=majority&appName=CarBarossa"
 
 # Connessione al DB
 try:
-    mongo = pymongo.MongoClient(host="localhost", port=27017, serverSelectionTimeoutMS=1000)
+    mongo = pymongo.MongoClient(uri_mongo, server_api=ServerApi('1'))
     db = mongo.vetture
     mongo.server_info()
     print("connect to db")
-except:
-    print("ERROR - Cannot connect to db")
+except Exception as e:
+    print(f"ERROR - Cannot connect to db: {e}")
 
 # Homepage
 @app.route("/")
